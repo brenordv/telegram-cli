@@ -6,7 +6,6 @@ on:
 
 env:
   PROJECT_PATH: Telegram.Cli/Telegram.Cli.csproj
-  VERSION: ${{ needs.set_release_version.outputs.version }}
 
 jobs:
   set_release_version:
@@ -18,7 +17,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Define next release version
         id: set_version
-        run: echo "version=$(cat Telegram.Cli/Telegram.Cli.csproj | grep -oP '(?<=<AssemblyVersion>).*(?=<\/AssemblyVersion>)')" >> $GITHUB_OUTPUT
+        run: echo "version=$(cat Telegram.Cli/Telegram.Cli.csproj | grep -oP '(?<=<AssemblyVersion>).*(?=<\/AssemblyVersion>)')" >> $GITHUB_ENV
 
   build:
     needs: set_release_version
@@ -38,6 +37,8 @@ jobs:
             artifact_suffix: macos
             exe_name: tme
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.set_release_version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -72,6 +73,8 @@ jobs:
     strategy:
       matrix:
         artifact_suffix: [windows, linux, macos]
+    env:
+      VERSION: ${{ needs.build.outputs.version }}
     steps:
       - name: Downloading artifact
         uses: actions/download-artifact@v3
