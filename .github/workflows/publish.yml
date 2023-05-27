@@ -73,13 +73,25 @@ jobs:
     strategy:
       matrix:
         artifact_suffix: [windows, linux, macos]
-    env:
-      VERSION: ${{ needs.set_release_version.outputs.version }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Create Tag
+        run: |
+          VERSION=${{ needs.set_release_version.outputs.version }}
+          git tag $VERSION
+          git push origin $VERSION
+
       - name: Downloading artifact
         uses: actions/download-artifact@v3
         with:
-          name: "telegramCli_${{ env.VERSION }}_${{ matrix.artifact_suffix }}"
+          name: "telegramCli_${{ needs.set_release_version.outputs.version }}_${{ matrix.artifact_suffix }}"
 
       - name: Create Release
         id: create_release
@@ -87,9 +99,9 @@ jobs:
         env:
           token: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
-          name: ${{ env.VERSION }}
+          tag_name: ${{ needs.set_release_version.outputs.version }}
+          name: ${{ needs.set_release_version.outputs.version }}
           draft: false
           prerelease: false
           fail_on_unmatched_files: true
-          files: "telegramCli_${{ env.VERSION }}_${{ matrix.artifact_suffix }}.zip"
+          files: "telegramCli_${{ needs.set_release_version.outputs.version }}_${{ matrix.artifact_suffix }}.zip"
