@@ -70,6 +70,8 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.set_release_version.outputs.version }}
     strategy:
       matrix:
         artifact_suffix: [windows, linux, macos]
@@ -84,9 +86,8 @@ jobs:
 
       - name: Create Tag
         run: |
-          VERSION=${{ needs.set_release_version.outputs.version }}
-          git tag $VERSION
-          git push origin $VERSION
+          git tag ${{ env.VERSION }}
+          git push origin ${{ env.VERSION }}
 
       - name: Downloading artifact
         uses: actions/download-artifact@v3
@@ -99,8 +100,8 @@ jobs:
         env:
           token: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.set_release_version.outputs.version }}
-          name: ${{ needs.set_release_version.outputs.version }}
+          tag_name: ${{ env.VERSION }}
+          name: ${{ env.VERSION }}
           draft: false
           prerelease: false
           fail_on_unmatched_files: true
