@@ -13,6 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "98. Documentation", "98. Do
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telegram.Cli.Test", "Telegram.Cli.Test\Telegram.Cli.Test.csproj", "{CCC91CEC-DDEC-46B6-984C-6AAFE9B45ACE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "97. Workflows", "97. Workflows", "{01AE8B31-A120-4F87-8F8C-B4C4EE22B0FB}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
